@@ -17,8 +17,10 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
     const {signIn} = useAuthActions()
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
-    const handleProviderSignIn = (value: "github" | "google") => {
-        signIn(value)
+        const [pending,setPending] = useState(false);
+    const onProviderSignIn = (value: "github" | "google") => {
+        setPending(true)
+        signIn(value).finally(() => {setPending(false)})
     }
     return (
         <Card className="w-full h-full p-8 ">
@@ -33,20 +35,20 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 
             <CardContent className="space-y-5 px-0 pb-0">
                 <form className="space-y-2.5">
-                    <Input disabled={false} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" type={"email"} required />
-                    <Input disabled={false} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type={"password"} required />
-                    <Button type={"submit"} className={"w-full"} size={"lg"} disabled = {false}>Continue</Button>
+                    <Input disabled={pending} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" type={"email"} required />
+                    <Input disabled={pending} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type={"password"} required />
+                    <Button type={"submit"} className={"w-full"} size={"lg"} disabled = {pending}>Continue</Button>
                 </form>
 
                 <Separator />
 
                 <div className={"flex flex-col gap-y-2.5"}>
-                    <Button onClick={() => {}} disabled={false} size={"lg"} variant={"outline"} className={"w-full relative"} >
+                    <Button onClick={() => onProviderSignIn("google")} disabled={pending} size={"lg"} variant={"outline"} className={"w-full relative"} >
                         <FcGoogle className={"size-5 absolute left-2.5 top-1/2 -translate-y-1/2"}/>
                         Continue with Google
                     </Button>
 
-                    <Button onClick={() => handleProviderSignIn("github")} disabled={false} size={"lg"} variant={"outline"} className={"w-full relative"} >
+                    <Button onClick={() => onProviderSignIn("github")} disabled={pending} size={"lg"} variant={"outline"} className={"w-full relative"} >
                         <FaGithub className={"size-5 absolute left-2.5 top-1/2 -translate-y-1/2"}/>
                         Continue with Github
                     </Button>
