@@ -8,6 +8,7 @@ import {SignInFlow} from "@/features/auth/types";
 import {useState} from "react";
 import {TriangleAlert} from "lucide-react";
 import {useAuthActions} from "@convex-dev/auth/react";
+import {PasswordInput} from "@/features/auth/components/password-input";
 
 interface SignUpCardProps {
     setState: (state:SignInFlow) => void;
@@ -16,7 +17,7 @@ interface SignUpCardProps {
 export const SignUpCard = ({ setState }: SignUpCardProps) => {
     const {signIn} = useAuthActions()
 
-
+    const [name,setName] = useState("");
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
     const [confirmPassword,setconfirmPassword] = useState("");
@@ -31,7 +32,7 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
         }
 
         setPending(true)
-        signIn("password", {email,password,flow:"signUp"}).catch(()=> {setError("Something went wrong")}).finally(()=>{setPending(false)})
+        signIn("password", {name,email,password,flow:"signUp"}).catch(()=> {setError("Something went wrong")}).finally(()=>{setPending(false)})
     }
 
     const onProviderSignUp = (value: "github" | "google") => {
@@ -58,9 +59,25 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
             )}
             <CardContent className="space-y-5 px-0 pb-0">
                 <form onSubmit={onPasswordSignUp} className="space-y-2.5">
+                    <Input disabled={pending} value={name} onChange={(e) => setName(e.target.value)} placeholder="Full Name" required />
                     <Input disabled={pending} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" type={"email"} required />
-                    <Input disabled={pending} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type={"password"} required />
-                    <Input disabled={pending} value={confirmPassword} onChange={(e) => setconfirmPassword(e.target.value)} placeholder="Confirm Password" type={"password"} required />
+                    <PasswordInput
+                        disabled={pending}
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        placeholder="Password"
+                        autoComplete="new-password"
+                        required
+                    />
+
+                    <PasswordInput
+                        disabled={pending}
+                        value={confirmPassword}
+                        onChange={(event) => setconfirmPassword(event.target.value)}
+                        placeholder="Confirm Password"
+                        autoComplete="new-password"
+                        required
+                    />
                     <Button type={"submit"} className={"w-full"} size={"lg"} disabled = {pending}>Continue</Button>
                 </form>
 

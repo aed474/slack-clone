@@ -8,8 +8,7 @@ import {SignInFlow} from "@/features/auth/types";
 import {useState} from "react";
 import { useAuthActions } from "@convex-dev/auth/react";
 import {TriangleAlert} from "lucide-react";
-
-
+import { PasswordInput } from "./password-input";
 interface SignInCardProps {
     setState: (state:SignInFlow) => void;
 };
@@ -51,7 +50,14 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
             <CardContent className="space-y-5 px-0 pb-0">
                 <form onSubmit={onPasswordSignIn} className="space-y-2.5">
                     <Input disabled={pending} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" type={"email"} required />
-                    <Input disabled={pending} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" type={"password"} required />
+                    <PasswordInput
+                        disabled={pending}
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                        placeholder="Password"
+                        autoComplete="current-password"
+                        required
+                    />
                     <Button type={"submit"} className={"w-full"} size={"lg"} disabled = {pending}>Continue</Button>
                 </form>
 
